@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+FIND_LIBRARY(WIRINGPI_LIBRARY wiringPi /usr/lib)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -68,10 +70,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -149,6 +151,10 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
+add_executable(pi_teleop_PS2_node src/pi_teleop_PS2.cpp PiPS2/PiPS2.cpp)
+target_link_libraries(pi_teleop_PS2_node ${catkin_LIBRARIES} ${WIRINGPI_LIBRARY})
+add_dependencies(pi_teleop_PS2_node pi_teleop_PS2_generate_messages_cpp wiringPi)
 
 #############
 ## Install ##

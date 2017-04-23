@@ -1,0 +1,3 @@
+[submodule "PiPS2"]
+	path = PiPS2
+	url = https://github.com/c-herring/PiPS2.git
