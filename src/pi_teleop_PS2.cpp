@@ -23,9 +23,9 @@ class Pi_Teleop_PS2
 		// Twist publisher
 		ros::Publisher twistPub;
 		
-		float _xLimit;
-		float _yLimit;
-		float _yawLimit;
+		double _xLimit;
+		double _yLimit;
+		double _yawLimit;
 		int cmdPin;
 		int dataPin;
 		int clkPin;
@@ -40,22 +40,32 @@ Pi_Teleop_PS2::Pi_Teleop_PS2()
 	// Create the twist publisher
 	twistPub = nh.advertise<geometry_msgs::Twist>("vel_set", 100);
 	
-	nh.param<float>("x_limit", _xLimit, 1.2);
-	nh.param<float>("y_limit", _yLimit, 1.2);
-	nh.param<float>("yaw_limit", _yawLimit, 1.2);
+	//if (!ros::NodeHandle::getParam("x_limit", _xLimit)) _xLimit = 1.2;
+	//if (!ros::NodeHandle::getParam("y_limit", _yLimit)) _yLimit = 1.2;
+	//if (!ros::NodeHandle::getParam("yaw_limit", _yawLimit)) _yawLimit = 1.2;
 	
-	nh.param<int>("ps2_cmd_pin", cmdPin, 10);
-	nh.param<int>("ps2_data_pin", dataPin, 9);
-	nh.param<int>("ps2_clk_pin", clkPin, 11);
-	nh.param<int>("ps2_attn_pin", attnPin, 8);	
+	//if (!ros::NodeHandle::getParam("ps2_cmd_pin", cmdPin)) cmdPin = 10;
+	//if (!ros::NodeHandle::getParam("ps2_data_pin", dataPin)) dataPin = 9;
+	//if (!ros::NodeHandle::getParam("ps2_clk_pin", clkPin)) clkPin = 11;
+	//if (!ros::NodeHandle::getParam("ps2_attn_pin", attnPin)) attnPin = 8;
+	
+	ros::NodeHandle nh_private("~");
+	nh_private.param("x_limit", _xLimit, 1.2);
+	nh_private.param("y_limit", _yLimit, 1.2);
+	nh_private.param("yaw_limit", _yawLimit, 1.2);
+	
+	nh_private.param("ps2_cmd_pin", cmdPin, 10);
+	nh_private.param("ps2_data_pin", dataPin, 9);
+	nh_private.param("ps2_clk_pin", clkPin, 11);
+	nh_private.param("ps2_attn_pin", attnPin, 8);	
 	
 }
 
 void Pi_Teleop_PS2::publishTwist(char x, char y, char yaw)
 {
-	twist_msg.linear.x = _xLimit * ((float)x - 128.0)/128.0;
-	twist_msg.linear.y = _yLimit * (127.0 - (float)y)/128.0;
-	twist_msg.angular.z = _yawLimit * (128.0-(float)yaw)/128.0;
+	twist_msg.linear.x = _xLimit * ((double)x - 128.0)/128.0;
+	twist_msg.linear.y = _yLimit * (127.0 - (double)y)/128.0;
+	twist_msg.angular.z = _yawLimit * (128.0-(double)yaw)/128.0;
 	
 	twistPub.publish(twist_msg);
 }

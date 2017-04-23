@@ -1,4 +1,4 @@
-# /bin/bash
+#!/bin/bash
 
 gpio export 10 out
 gpio export 9 in
